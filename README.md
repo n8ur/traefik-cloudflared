@@ -13,7 +13,7 @@ Three things that most of the tutorials I've found don't mention, or gloss over:
 
 *  The docker default network doesn't provide DNS-like capability, so it's best to use a network for the cloudflared<-->traefik  traffic.  This "cloudflared-traefik" network is created outside these containers and must exist before running them.
 
-*  The Cloudflare tunnel is a "wildcard" with a public hostname of "*" point to a service of type "HTTPS" pointing to the private LAN address of the traefik instance.  *VERY IMPORTANT* -- in the Cloudflare configuration, click on "Additional Application Settings"/"TL" and make sure that "No TLS Verify" is enabled.  By default it's off, and this is what caused me to lose hair for hours.
+*  The Cloudflare tunnel is a "wildcard" with a public hostname of "*" point to a service of type "HTTPS" pointing to the private LAN address of the traefik instance.  *VERY IMPORTANT* -- in the Cloudflare configuration, click on "Additional Application Settings"/"TLS" and make sure that "No TLS Verify" is enabled.  By default it's off, and this is what caused me to lose hair for hours.
 
 *  Once the tunnel is created, navigate to the Cloudflare DNS for the domain, add a CNAME record named "*" pointing to <tunnel_id>.cfargotunnel.com, and ensure that record has "proxy" turned on.  You *do not* need to create additional CNAME records for each service.  Any URL that traefik cannot process will be treated as a "not found".
 

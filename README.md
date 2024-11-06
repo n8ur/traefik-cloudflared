@@ -11,7 +11,7 @@ The traefik config files use YAML syntax and separate the setup functions (in do
 
 Three things that most of the tutorials I've found don't mention, or gloss over:
 
-*  The docker default network doesn't provide DNS-like capability, so it's best to use a network for the cloudflared<-->traefik  traffic.  This "cloudflared-traefik" network is created outside these containers and must exist before running them.
+*  The docker default network doesn't provide DNS-like capability, so it's best to use a separate network for the cloudflared<-->traefik  traffic.  Otherwise you have to identify the services by IP address, and those could change as the docker environment changes.  I cared the "cloudflared-traefik" network via a docker command, and it must exist before running the containers.
 
 *  The Cloudflare tunnel is a "wildcard" with a public hostname of "*" point to a service of type "HTTPS" pointing to the private LAN address of the traefik instance.  *VERY IMPORTANT* -- in the Cloudflare configuration, click on "Additional Application Settings"/"TLS" and make sure that "No TLS Verify" is enabled.  By default it's off, and this is what caused me to lose hair for hours.
 

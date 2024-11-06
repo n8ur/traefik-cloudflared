@@ -1,0 +1,16 @@
+# http routing section
+http:
+  routers:
+    router1:
+      entryPoints:
+        - "websecure"
+      tls:
+        certResolver: letsencrypt
+      rule: "Host(`grafana.febo.com`)"
+      service: grafana-service
+
+  services:
+    grafana-service:
+      loadBalancer:
+        servers:
+          - url: 'http://10.73.1.51:3000'

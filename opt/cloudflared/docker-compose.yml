@@ -1,0 +1,23 @@
+# cloudflare API token is in ./.env
+# NOTE -- for each public address in cloudflare tunnel,
+# go to CF control panel and turn off TLSVerify!!!
+# You might need to set SSL/TLS options to "FULL" rather than "FLEXIBLE"
+
+services:
+  cloudflared:
+    container_name: cloudflared
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    volumes:
+      - ./config.yml:/etc/cloudflared/config.yml
+    env_file:
+      - .tunnel-token
+    command: tunnel run
+    cap_add:
+      - NET_ADMIN   # this allows greater udp buffer sizes
+    networks:
+      - cloudflared-traefik
+
+networks:
+  cloudflared-traefik:
+    external: true

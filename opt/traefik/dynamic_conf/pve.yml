@@ -1,0 +1,25 @@
+# proxmox router
+# note that proxmox wants to serve its own self-signed cert,
+# which confuses things.  Stuff at bottom of this file avoids that.
+#
+http:
+  routers:
+    router2:
+      entryPoints:
+        - "web"
+        - "websecure"
+      rule: "Host(`pve-1.febo.com`)"
+      tls:
+        certResolver: letsencrypt
+      service: proxmox
+
+  services:
+    proxmox:
+      loadBalancer:
+        passHostHeader: true
+        serversTransport: "pve"
+        servers:
+          - url: 'https://10.73.1.40:8006'  # proxmox forces https
+  serversTransports:
+    pve:
+      insecureSkipVerify: true

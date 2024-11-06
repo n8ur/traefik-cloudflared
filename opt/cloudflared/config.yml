@@ -1,0 +1,9 @@
+tunnel: 31a97d56-bc50-49e8-a3b2-2f75244841d7
+
+ingress:
+  - hostname: "*.febo.com"   # Wildcard entry for all subdomains
+    service: https://traefik
+    originRequest:
+      noTLSVerify: true
+  - service: http_status:404  # Fallback for unspecified routes
+

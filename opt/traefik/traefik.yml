@@ -1,0 +1,51 @@
+log:
+  level:  INFO
+
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: "febo.com"
+            sans:
+              - "*.febo.com"
+
+api:
+  dashboard: true
+  insecure: true  # Only for local access/testing; remove in production
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+
+  file:
+    directory: "dynamic_conf"
+    watch: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: jra@febo.com   # Replace with your email for Let's Encrypt
+      storage: /letsencrypt/acme.json  # Path to store certificates
+      dnschallenge:
+        provider: cloudflare
+        delayBeforeCheck: 5
+        resolvers:
+          - "1.1.1.1:53"
+          - "8.8.8.8:53"

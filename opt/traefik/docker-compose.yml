@@ -1,0 +1,24 @@
+services:
+  traefik:
+    container_name: "traefik"
+    image: "traefik:v3.2"
+    restart:  unless-stopped
+
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+      - "443:443/udp"   # HTTPS via HTTP/3 QUIC UDP
+      - "8080:8080"     # management web UI
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/opt/traefik/letsencrypt:/letsencrypt"
+      - "/opt/traefik/traefik.yml:/traefik.yml"
+      - "/opt/traefik/dynamic_conf:/dynamic_conf"
+    networks:
+      - cloudflared-traefik
+    env_file: ".dns-token"
+       
+
+networks:
+  cloudflared-traefik:
+    external: true
